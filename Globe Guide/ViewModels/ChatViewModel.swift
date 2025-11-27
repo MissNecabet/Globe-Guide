@@ -10,7 +10,7 @@ class ChatViewModel {
         let userMessage = ChatMessage(text: text, type: .user, date: Date())
         messages.append(userMessage)
 
-        // AI cavabı simulyasiya
+        // AI cavabı burdan gelecek..
         let aiMessage = ChatMessage(text: "AI response to: \(text)", type: .ai, date: Date())
         messages.append(aiMessage)
 
