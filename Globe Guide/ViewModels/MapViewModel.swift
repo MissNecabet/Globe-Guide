@@ -7,46 +7,28 @@
 //Available countries: ["Antigua and Barbuda", "Bhutan", "Italy", "Tuvalu", "Anguilla", "Australia", "Belize", "Vanuatu", "Belarus", "Mauritius", "Laos", "Senegal", "Turkey", "Bolivia", "Sri Lanka", "Norfolk Island", "China", "Caribbean Netherlands", "Guernsey", "Sudan", "Mayotte", "Saint Barthélemy", "Vatican City", "Turks and Caicos Islands", "Curaçao", "Botswana", "Benin", "Lithuania", "Montserrat", "British Virgin Islands", "Burundi", "United States Minor Outlying Islands", "Ireland", "Solomon Islands", "Bermuda", "Finland", "Peru", "Bangladesh", "Denmark", "Saint Vincent and the Grenadines", "Dominican Republic", "Moldova", "Bulgaria", "Costa Rica", "Namibia", "Svalbard and Jan Mayen", "Luxembourg", "Russia", "United Arab Emirates", "Sint Maarten", "Bahamas", "Japan", "Nigeria", "Ghana", "Sierra Leone", "Saint Pierre and Miquelon", "Albania", "Tokelau", "Saint Helena, Ascension and Tristan da Cunha", "Tonga", "Turkmenistan", "Djibouti", "Central African Republic", "Lebanon", "Latvia", "Cocos (Keeling) Islands", "Gambia", "Honduras", "Niue", "Mauritania", "Kosovo", "Wallis and Futuna", "South Georgia", "French Polynesia", "Togo", "Belgium", "Zambia", "Cayman Islands", "Pitcairn Islands", "Cook Islands", "Madagascar", "Montenegro", "South Korea", "Ethiopia", "Mongolia", "Slovakia", "Cuba", "Antarctica", "Guatemala", "French Guiana", "Norway", "Grenada", "Réunion", "Chile", "Colombia", "Saudi Arabia", "Israel", "Germany", "New Zealand", "Greenland", "Kyrgyzstan", "El Salvador", "Faroe Islands", "Palau", "Malta", "Syria", "Timor-Leste", "Croatia", "Papua New Guinea", "Netherlands", "Liberia", "Somalia", "Venezuela", "Haiti", "Algeria", "Northern Mariana Islands", "Saint Martin", "Heard Island and McDonald Islands", "Aruba", "Egypt", "Malawi", "Equatorial Guinea", "United States Virgin Islands", "Ecuador", "Uzbekistan", "Gabon", "South Sudan", "Iran", "Kazakhstan", "Nicaragua", "Iceland", "Slovenia", "Guadeloupe", "Cameroon", "Argentina", "Azerbaijan", "Uganda", "Niger", "Christmas Island", "Myanmar", "Poland", "Jordan", "Hong Kong", "DR Congo", "Eritrea", "Kiribati", "Marshall Islands", "Burkina Faso", "Zimbabwe", "Kenya", "Comoros", "Gibraltar", "Brunei", "Sweden", "Lesotho", "Isle of Man", "Micronesia", "Tanzania", "Cape Verde", "Afghanistan", "Andorra", "Greece", "Vietnam", "French Southern and Antarctic Lands", "Iraq", "Libya", "Portugal", "Pakistan", "Maldives", "Morocco", "Bosnia and Herzegovina", "Samoa", "Palestine", "Oman", "Bahrain", "United States", "Puerto Rico", "British Indian Ocean Territory", "Jersey", "North Macedonia", "Tunisia", "Trinidad and Tobago", "Estonia", "Singapore", "Panama", "Switzerland", "Uruguay", "Tajikistan", "Taiwan", "South Africa", "Liechtenstein", "Brazil", "Armenia", "Georgia", "Åland Islands", "Qatar", "Dominica", "Ukraine", "Guinea", "Macau", "Western Sahara", "Czechia", "Austria", "Saint Kitts and Nevis", "Saint Lucia", "Yemen", "Rwanda", "Monaco", "São Tomé and Príncipe", "Republic of the Congo", "Paraguay", "Bouvet Island", "Mozambique", "France", "Eswatini", "Barbados", "Spain", "Thailand", "Guinea-Bissau", "Angola", "India", "Martinique", "New Caledonia", "Seychelles", "Falkland Islands", "United Kingdom", "Fiji", "San Marino", "Mali", "Canada", "Jamaica", "Nauru", "Indonesia", "Guam", "Ivory Coast", "Kuwait", "Philippines", "Guyana", "Hungary", "Mexico", "North Korea", "Romania", "Suriname", "American Samoa", "Nepal", "Chad", "Serbia", "Cambodia", "Malaysia", "Cyprus"}
 import Foundation
 import MapKit
-
 class MapViewModel {
+    private let service = CountryService()
     var countries: [Country] = []
-    var selectedCountry: Country?
-    var isSuccessLoadCountries = false
-
+    
     func loadCountries(completion: @escaping (Bool) -> Void) {
-        NetworkManager.shared.getCountries { [weak self] result in
+        service.getAllCountries { [weak self] result in
             switch result {
             case .success(let countries):
                 self?.countries = countries
-                self?.isSuccessLoadCountries = true
                 completion(true)
-            case .failure(let error):
-                print("API error:", error.localizedDescription)
+            case .failure(_):
                 completion(false)
             }
         }
     }
-
-
-    func selectRandomCountry() -> Country? {
-        guard !countries.isEmpty else { return nil }
-        let country = countries.randomElement()!
-        selectedCountry = country
-        print("Random country: \(country.name), Capital: \(country.capital)")
-        return country
-    }
-
+    
     func searchCountry(name: String) -> Country? {
-        let cleanedName = name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        if let country = countries.first(where: { $0.name.lowercased() == cleanedName }) {
-            selectedCountry = country
-            print("Searched country: \(country.name), Capital: \(country.capital)")
-            return country
-        } else {
-            print("No match for:", name)
-            print("Available countries:", countries.map { $0.name })
-            return nil
-        }
+        let cleaned = name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        return countries.first { $0.name.lowercased() == cleaned }
     }
-
+    
+    func selectRandomCountry() -> Country? {
+        return countries.randomElement()
+    }
 }

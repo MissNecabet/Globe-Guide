@@ -1,24 +1,20 @@
 //
-//  NetworkManager.swift
+//  CountryService.swift
 //  Globe Guide
 //
 //  Created by Najabat Sofiyeva on 11.12.25.
 //
 
-import Alamofire
 import Foundation
 import CoreLocation
 
-class NetworkManager {
-    static let shared = NetworkManager() // Singleton
-
-    private init() {}
-
-    func getCountries(completion: @escaping (Result<[Country], Error>) -> Void) {
+class CountryService {
+    
+    func getAllCountries(completion: @escaping (Result<[Country], Error>) -> Void) {
         let url = "https://restcountries.com/v3.1/all?fields=name,capital,latlng,flags,region,population"
-
-        AF.request(url).validate().responseData { response in
-            switch response.result {
+        
+        NetworkManager.shared.request(url: url) { result in
+            switch result {
             case .success(let data):
                 do {
                     let apiCountries = try JSONDecoder().decode([CountryAPIModel].self, from: data)
@@ -28,14 +24,16 @@ class NetworkManager {
                             name: api.name.common,
                             capital: api.capital?.first ?? "No capital",
                             coordinate: CLLocationCoordinate2D(latitude: api.latlng[0], longitude: api.latlng[1]),
-                            flagUrl: api.flags.png
+                            flagUrl: api.flags.png,
+                            population: api.population ?? 0,
+                            region: api.region ?? "Unknown",
+                            subregion: api.subregion ?? "Unknown"
                         )
                     }
                     completion(.success(countries))
                 } catch {
                     completion(.failure(error))
                 }
-
             case .failure(let error):
                 completion(.failure(error))
             }

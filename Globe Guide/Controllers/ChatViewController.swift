@@ -8,7 +8,13 @@ class ChatViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: "#1B202D")
+        view.backgroundColor = UIColor(
+            red: 27/255,
+            green: 32/255,
+            blue: 45/255,  
+            alpha: 1
+        )
+
         setupProfileHeader()
         setupTableView()
         setupInputView()

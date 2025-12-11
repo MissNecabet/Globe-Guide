@@ -4,25 +4,28 @@ import MapKit
 class MapViewController: UIViewController, UISearchBarDelegate {
 
     var customMap: Map!
-    var searchBar: UISearchBar!
-    let randomButton = UIButton(type: .system)
+       var searchBar: UISearchBar!
+       let randomButton = UIButton(type: .system)
 
-    let viewModel = MapViewModel()
+     
+       let profileImageView = UIImageView()
+       let profileLabel = UILabel()
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupCustomMap()
+       let viewModel = MapViewModel()
+
+       override func viewDidLoad() {
+           super.viewDidLoad()
+           setupCustomMap()
            setupSearchBarElements()
            setupRandomButtonElements()
+           setupProfileView()
            setupConstraintsForButtonAndSearch()
-           
-        // search bar set edilidkden sonra false teyin edilir , eks halda error
+             
            randomButton.isEnabled = false
            searchBar.isUserInteractionEnabled = false
-           
-         
+              
            loadCountries()
-    }
+       }
 
    
     func setupCustomMap() {
@@ -32,7 +35,35 @@ class MapViewController: UIViewController, UISearchBarDelegate {
         customMap.addMarker(coordinate: paris, title: "Paris")
         customMap.setRegion(coordinate: paris, zoom: 5)
     }
+    func setupProfileView() {
+        profileImageView.image = UIImage(systemName: "person.circle")
+        profileImageView.tintColor = .white
+        profileImageView.contentMode = .scaleAspectFill
+        profileImageView.clipsToBounds = true
+        profileImageView.layer.cornerRadius = 25
+        profileImageView.translatesAutoresizingMaskIntoConstraints = false
+        profileImageView.isUserInteractionEnabled = true
+        view.addSubview(profileImageView)
 
+        profileLabel.text = "Guider"
+        profileLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        profileLabel.textAlignment = .center
+        profileLabel.textColor = .white
+        profileLabel.translatesAutoresizingMaskIntoConstraints = false
+        profileLabel.isUserInteractionEnabled = true 
+        view.addSubview(profileLabel)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(guiderTapped))
+        profileImageView.addGestureRecognizer(tapGesture)
+        profileLabel.addGestureRecognizer(tapGesture)
+    }
+
+    @objc func guiderTapped() {
+        let chatVC = ChatViewController()
+        navigationController?.pushViewController(chatVC, animated: true)
+    }
+
+       
     func setupSearchBarElements() {
         searchBar = UISearchBar()
         searchBar.placeholder = "Search for a country"
@@ -69,7 +100,14 @@ class MapViewController: UIViewController, UISearchBarDelegate {
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             searchBar.heightAnchor.constraint(equalToConstant: 50),
           
-            searchBar.leadingAnchor.constraint(equalTo: randomButton.trailingAnchor, constant: 5)
+            searchBar.leadingAnchor.constraint(equalTo: randomButton.trailingAnchor, constant: 5),
+            profileImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            profileImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            profileImageView.widthAnchor.constraint(equalToConstant: 50),
+            profileImageView.heightAnchor.constraint(equalToConstant: 50),
+
+            profileLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 4),
+            profileLabel.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor)
         ])
     }
     
@@ -99,7 +137,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
         // Keyboardu baqlayir
         searchBar.resignFirstResponder()
     }
-
+   
 }
 extension MapViewController {
     func loadCountries() {
