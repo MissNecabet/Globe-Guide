@@ -7,13 +7,21 @@ class MapViewController: UIViewController, UISearchBarDelegate {
     var searchBar: UISearchBar!
     let randomButton = UIButton(type: .system)
 
+    let viewModel = MapViewModel()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         setupCustomMap()
-        setupSearchBarElements()
-        setupRandomButtonElements()
-        setupConstraintsForButtonAndSearch()
+           setupSearchBarElements()
+           setupRandomButtonElements()
+           setupConstraintsForButtonAndSearch()
+           
+        // search bar set edilidkden sonra false teyin edilir , eks halda error
+           randomButton.isEnabled = false
+           searchBar.isUserInteractionEnabled = false
+           
+         
+           loadCountries()
     }
 
    
@@ -41,7 +49,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
  
     func setupRandomButtonElements() {
         randomButton.setTitle("Random", for: .normal)
-        randomButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        randomButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14 )
         randomButton.backgroundColor = .systemBlue
         randomButton.setTitleColor(.white, for: .normal)
         randomButton.layer.cornerRadius = 10
@@ -55,6 +63,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
             randomButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             randomButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
             randomButton.heightAnchor.constraint(equalToConstant: 40),
+            randomButton.widthAnchor.constraint(equalToConstant: 70),
         
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
@@ -63,9 +72,46 @@ class MapViewController: UIViewController, UISearchBarDelegate {
             searchBar.leadingAnchor.constraint(equalTo: randomButton.trailingAnchor, constant: 5)
         ])
     }
-
+    
+   
     @objc func randomButtonTapped() {
-        print("Random button tapped")
+        if let country = viewModel.selectRandomCountry() {
+           
+            customMap.setRegion(coordinate: country.coordinate, zoom: 5)
+            customMap.addMarker(coordinate: country.coordinate, title: country.name)
+          
+            print("Selected random country:", country.name)
+        }
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text else { return }
+
+        if let country = viewModel.searchCountry(name: text) {
+            customMap.setRegion(coordinate: country.coordinate, zoom: 5)
+            customMap.addMarker(coordinate: country.coordinate, title: country.name)
+
+            print("Found country:", country.name)
+        } else {
+            print("Country not found")
+        }
+
+        // Keyboardu baqlayir
+        searchBar.resignFirstResponder()
+    }
+
+}
+extension MapViewController {
+    func loadCountries() {
+       
+
+        viewModel.loadCountries { success in
+               if success {
+                   DispatchQueue.main.async {
+                       self.randomButton.isEnabled = true
+                       self.searchBar.isUserInteractionEnabled = true
+                   }
+               }
+           }
     }
 }
-

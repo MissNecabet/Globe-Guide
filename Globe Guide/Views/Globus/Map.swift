@@ -7,6 +7,7 @@ class Map: UIView, MKMapViewDelegate {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+            
         setupMap()
         setupGestures()
     }
@@ -19,7 +20,7 @@ class Map: UIView, MKMapViewDelegate {
 
     private func setupMap() {
         MK.frame = self.bounds
-      //  MK.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    
         MK.delegate = self
         MK.mapType = .hybrid
         self.addSubview(MK)
