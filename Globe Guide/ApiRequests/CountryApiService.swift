@@ -44,7 +44,7 @@ class GoogleAPIService {
             case .success(let placeResponse):
                 let places = placeResponse.results.map {
                     Place(name: $0.name,
-                          photoReference: $0.photos?.first?.photo_reference,
+                          photoLink: $0.photos?.first?.photo_reference,
                           address: $0.vicinity)
                 }
                 completion(places)

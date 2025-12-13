@@ -12,6 +12,11 @@ class CountryBottomSheet: UIViewController {
     private let scrollView = UIScrollView()
     private let contentView = UIStackView()
     
+    
+    let placeView = UIView()
+    let countryNameLabel = UILabel()
+    
+    
     init(country: Country) {
         self.country = country
         super.init(nibName: nil, bundle: nil)
@@ -56,27 +61,26 @@ class CountryBottomSheet: UIViewController {
          contentView.addArrangedSubview(titleLabel)
         
         for place in country.places {
-            let placeView = UIView()
+           
             placeView.heightAnchor.constraint(equalToConstant: 120).isActive = true
              placeView.backgroundColor = .secondarySystemBackground
               placeView.layer.cornerRadius = 10
             
-            let nameLabel = UILabel()
-            nameLabel.text = place.name
-            nameLabel.font = .systemFont(ofSize: 16, weight: .medium)
-            nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        placeView.addSubview(nameLabel)
+           countryNameLabel.text = place.name
+            countryNameLabel.font = .systemFont(ofSize: 16, weight: .medium)
+            countryNameLabel.translatesAutoresizingMaskIntoConstraints = false
+            placeView.addSubview(countryNameLabel)
             
             NSLayoutConstraint.activate([
-                nameLabel.centerYAnchor.constraint(equalTo: placeView.centerYAnchor),
-                nameLabel.leadingAnchor.constraint(equalTo: placeView.leadingAnchor, constant: 10)
+                countryNameLabel.centerYAnchor.constraint(equalTo: placeView.centerYAnchor),
+                countryNameLabel.leadingAnchor.constraint(equalTo: placeView.leadingAnchor, constant: 10)
             ])
             
-            if let photoUrl = place.photoReference {
+            if let photoUrl = place.photoLink {
                 let imageView = UIImageView()
                 imageView.contentMode = .scaleAspectFill
                 imageView.clipsToBounds = true
-                imageView.layer.cornerRadius = 8
+                imageView.layer.cornerRadius = 2
                 imageView.translatesAutoresizingMaskIntoConstraints = false
                 placeView.addSubview(imageView)
                 

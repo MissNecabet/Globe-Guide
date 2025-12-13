@@ -14,6 +14,6 @@ struct Country {
 }
 struct Place {
     let name: String
-    let photoReference: String?
+    let photoLink: String?
     let address: String
 }

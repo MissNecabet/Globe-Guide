@@ -44,6 +44,8 @@ class MapViewController: UIViewController, UISearchBarDelegate {
         searchBar.delegate = self
         searchBar.searchTextField.backgroundColor = .white
         searchBar.searchTextField.layer.cornerRadius = 18
+        searchBar.layer.borderWidth = 1
+        searchBar.layer.borderColor = UIColor.lightGray.cgColor
         searchBar.searchTextField.layer.masksToBounds = true
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchBar)
