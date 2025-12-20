@@ -12,6 +12,8 @@ class MapViewController: UIViewController, UISearchBarDelegate {
     
     let viewModel = MapViewModel()
     
+    let vm = GoogleGeocodeViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -44,8 +46,6 @@ class MapViewController: UIViewController, UISearchBarDelegate {
         searchBar.delegate = self
         searchBar.searchTextField.backgroundColor = .white
         searchBar.searchTextField.layer.cornerRadius = 18
-        searchBar.layer.borderWidth = 1
-        searchBar.layer.borderColor = UIColor.lightGray.cgColor
         searchBar.searchTextField.layer.masksToBounds = true
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchBar)
@@ -114,20 +114,28 @@ class MapViewController: UIViewController, UISearchBarDelegate {
     }
     
     private func fetchAndShowCountry(name: String) {
-        GoogleAPIService.shared.geocodeAPIService(countryName: name) { result in
+        vm.loadGeocode(for: name) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let country):
-                    let region = MKCoordinateRegion(center: country.coordinate, latitudinalMeters: 2000000, longitudinalMeters: 2000000)
+                    let coord = country.coordinate
+                    let name = country.name
+
+                    let region = MKCoordinateRegion(center: coord,
+                                                    latitudinalMeters: 2000000,
+                                                    longitudinalMeters: 2000000)
                     self.mapView.setRegion(region, animated: true)
-                    self.addMarker(coordinate: country.coordinate, title: country.name)
+                    self.addMarker(coordinate: coord, title: name)
                     self.presentBottomSheet(country: country)
+
                 case .failure(let error):
                     print("Error fetching country------", error.localizedDescription)
                 }
             }
         }
     }
+
+
     
     func presentBottomSheet(country: Country) {
         let sheet = CountryBottomSheet(country: country)

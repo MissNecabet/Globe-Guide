@@ -5,7 +5,7 @@
 //  Created by Najabat Sofiyeva on 13.12.25.
 //
 
-
+// google maps place de gelen data modeli
 struct PlaceResponse: Codable {
     let results: [PlaceResult]
 }

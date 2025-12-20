@@ -6,7 +6,7 @@
 //
 import Foundation
 import CoreLocation
-
+// view da lazim olan model
 struct Country {
     let name: String
     let coordinate: CLLocationCoordinate2D
@@ -14,6 +14,6 @@ struct Country {
 }
 struct Place {
     let name: String
-    let photoLink: String?
+    let photoReference: String?
     let address: String
 }
