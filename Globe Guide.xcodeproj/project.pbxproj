@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		852603772EEAF7DD00D0CE8D /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 852603762EEAF7DD00D0CE8D /* Alamofire */; };
+		857F721E2EFF1CA800EA67FD /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 857F721C2EFF1CA800EA67FD /* CoreData.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		857F721D2EFF1CA800EA67FD /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
 		85B2B4B52ED88BA200240B01 /* Globe Guide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Globe Guide.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -50,6 +52,7 @@
 		85B2B4AC2ED88BA100240B01 = {
 			isa = PBXGroup;
 			children = (
+				857F721C2EFF1CA800EA67FD /* CoreData.xcdatamodeld */,
 				85B2B4B72ED88BA200240B01 /* Globe Guide */,
 				85B2B4B62ED88BA200240B01 /* Products */,
 			);
@@ -141,6 +144,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				857F721E2EFF1CA800EA67FD /* CoreData.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +365,19 @@
 			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		857F721C2EFF1CA800EA67FD /* CoreData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				857F721D2EFF1CA800EA67FD /* CoreData.xcdatamodel */,
+			);
+			currentVersion = 857F721D2EFF1CA800EA67FD /* CoreData.xcdatamodel */;
+			path = CoreData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 85B2B4AD2ED88BA100240B01 /* Project object */;
 }

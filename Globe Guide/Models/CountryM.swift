@@ -13,6 +13,7 @@ struct Country {
     let places: [Place]
 }
 struct Place {
+    
     let name: String
     let photoReference: String?
     let address: String

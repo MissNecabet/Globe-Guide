@@ -15,8 +15,8 @@ class ChatInputView: UIView {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     private func setupUI() {
-        // background color normal UIColor ilə
-        backgroundColor = UIColor(red: 61/255, green: 67/255, blue: 84/255, alpha: 1) // #3D4354
+      
+        backgroundColor = UIColor(named: "input") 
         layer.cornerRadius = 25
         clipsToBounds = true
 
