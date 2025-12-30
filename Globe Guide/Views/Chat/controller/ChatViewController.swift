@@ -1,9 +1,9 @@
 import UIKit
 
 enum ChatAction {
-    case openMap
+    case openMap(query: String)
 }
-import UIKit
+
 
 class ChatViewController: UIViewController {
 
@@ -13,15 +13,9 @@ class ChatViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = UIColor(named:"ChatBg")
-
-
-        setupTableView()
-        setupInputView()
-        bindViewModel()
+        setupAll()
     }
-
+   
     private func setupTableView() {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
@@ -56,7 +50,7 @@ class ChatViewController: UIViewController {
         }
     }
 
-    private func bindViewModel() {
+    private func listenToVM() {
         viewModel.didUpdateMessages = { [weak self] in
             guard let self = self else { return }
 
@@ -100,19 +94,34 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
 
         let message = viewModel.message(at: indexPath.row)
 
-        if message.action == .openMap {
-            openOnMap()
+        if case let .openMap(query) = message.action {
+            openOnMap(query: query)
         }
     }
 
-    private func openOnMap() {
+
+    private func openOnMap(query: String) {
         guard let nav = navigationController else { return }
 
         for vc in nav.viewControllers {
-            if vc is MapViewController {
-                nav.popToViewController(vc, animated: true)
+            if let mapVC = vc as? MapViewController {
+                nav.popToViewController(mapVC, animated: true)
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    mapVC.loadCountry(name: query)
+                }
                 return
             }
         }
     }
+    private func setupAll(){
+       
+        view.backgroundColor = UIColor(named:"ChatBg")
+
+
+        setupTableView()
+        setupInputView()
+        listenToVM()
+    }
+
 }

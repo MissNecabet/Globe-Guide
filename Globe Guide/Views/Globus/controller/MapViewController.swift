@@ -3,6 +3,7 @@ import MapKit
 import CoreLocation
 
 enum MapType: Int, CaseIterable {
+    // xerite novleri
     case standard, satellite, hybrid
 
     var icon: String {
@@ -21,25 +22,30 @@ enum MapType: Int, CaseIterable {
         }
     }
 }
-import UIKit
-import MapKit
-import CoreLocation
+
 
 class MapViewController: UIViewController, UISearchBarDelegate {
+    
 
     var mapView: MKMapView!
     let searchContainer = UIView()
     let searchBar = UISearchBar()
     let bottomButton = UIButton(type: .system)
+    
+    //  Guider profile
+    let guiderImageView = UIImageView()
+    let guiderNameLabel = UILabel()
+
 
     let favoritesButton = UIButton(type: .system)
-
-      let controlContainer = UIStackView()
+    let controlContainer = UIStackView()
     var mapTypeButtons: [UIButton] = []
     let zoomInButton = UIButton(type: .system)
-     let zoomOutButton = UIButton(type: .system)
+    let zoomOutButton = UIButton(type: .system)
+    
     let vm = GoogleGeocodeViewModel()
-      let randomVM = MapViewModel()
+    let randomVM = MapViewModel()
+    
     let geocoder = CLGeocoder()
 
     override func viewDidLoad() {
@@ -72,6 +78,38 @@ class MapViewController: UIViewController, UISearchBarDelegate {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchContainer.addSubview(searchBar)
     }
+    // MARK: - Simple Guider Profile (Student Level)
+    func setupGuiderProfile() {
+
+        // PROFILE IMAGE
+        guiderImageView.image = UIImage(systemName: "person.fill")
+        guiderImageView.tintColor = .white
+        guiderImageView.backgroundColor = .systemGray
+        guiderImageView.contentMode = .scaleAspectFit
+        guiderImageView.layer.cornerRadius = 22
+        guiderImageView.clipsToBounds = true
+        guiderImageView.translatesAutoresizingMaskIntoConstraints = false
+        guiderImageView.isUserInteractionEnabled = true
+        view.addSubview(guiderImageView)
+
+        // LABEL
+        guiderNameLabel.text = ">Your Guider<"
+        guiderNameLabel.font = .systemFont(ofSize: 13)
+        guiderNameLabel.textColor = .blue
+        guiderNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(guiderNameLabel)
+
+        
+        let tap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(openChatViewController)
+        )
+        guiderImageView.addGestureRecognizer(tap)
+        guiderNameLabel.addGestureRecognizer(tap)
+        guiderNameLabel.isUserInteractionEnabled = true
+        guiderImageView.isUserInteractionEnabled = true
+    }
+
 
       func setupBottomButton() {
         bottomButton.setTitle("📌 Random Country", for: .normal)
@@ -188,6 +226,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
         searchBar.resignFirstResponder()
         loadCountry(name: text)
     }
+    // button basanda olke melumatlari ile baqli sorqu burda gedir
     func loadCountry(name: String) {
         vm.loadGeocode(for: name) { [weak self] result in
             DispatchQueue.main.async {
@@ -259,6 +298,18 @@ class MapViewController: UIViewController, UISearchBarDelegate {
             searchBar.trailingAnchor.constraint(equalTo: searchContainer.trailingAnchor, constant: -8),
             searchBar.centerYAnchor.constraint(equalTo: searchContainer.centerYAnchor),
 
+//            guiderImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            guiderImageView.topAnchor.constraint(
+                equalTo: searchBar.bottomAnchor,
+                   constant: 20
+               ),
+            guiderImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            guiderImageView.widthAnchor.constraint(equalToConstant: 44),
+            guiderImageView.heightAnchor.constraint(equalToConstant: 44),
+            
+            guiderNameLabel.topAnchor.constraint(equalTo: guiderImageView.bottomAnchor, constant: 4),
+            guiderNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
+            
             favoritesButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             favoritesButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20),
             favoritesButton.widthAnchor.constraint(equalToConstant: 40),
@@ -293,17 +344,22 @@ class MapViewController: UIViewController, UISearchBarDelegate {
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
+    @objc func openChatViewController() {
+        let chatVC = ChatViewController()
+        navigationController?.pushViewController(chatVC, animated: true)
+    }
+
     
     private func setupAll(){
-        view.backgroundColor = .systemBackground
-
         setupMap()
         setupTapGesture()
         setupSearchBar()
+        setupGuiderProfile()
         setupBottomButton()
         setupFavoritesButton()
         setupFloatingControls()
         setupConstraints()
         setupKeyboardDismiss()
+        
     }
 }

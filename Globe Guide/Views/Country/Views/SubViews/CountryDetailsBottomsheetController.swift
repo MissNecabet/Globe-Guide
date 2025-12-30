@@ -30,7 +30,7 @@ final class CountryDetailsViewController: UIViewController {
     private func setupAll(){
         setupUI()
         bind()
-        vm.getCountry(name: countryName)
+        vm.getCountryDetails(name: countryName)
     }
 
     private func setupUI() {

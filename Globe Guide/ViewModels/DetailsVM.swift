@@ -15,7 +15,7 @@ final class CountryViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
 
-    func getCountry(name: String) {
+    func getCountryDetails(name: String) {
         isLoading = true
         errorMessage = nil
 

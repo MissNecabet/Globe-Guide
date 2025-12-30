@@ -57,7 +57,9 @@ class ChatMessageCell: UITableViewCell {
 
     func configure(with message: ChatMessage) {
         messageLabel.text = message.text
+        messageLabel.textColor = .white
         dateLabel.text = DateFormatter.localizedString(from: message.date, dateStyle: .none, timeStyle: .short)
+        dateLabel.textColor = .white
 
         if message.type == .user {
             bubbleView.backgroundColor = UIColor(named:"user")
